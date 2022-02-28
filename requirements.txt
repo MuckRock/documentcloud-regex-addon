@@ -1,0 +1,2 @@
+python-documentcloud
+requests

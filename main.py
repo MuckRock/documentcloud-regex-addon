@@ -15,6 +15,7 @@ class Regex(AddOn):
 
         with open("matches.csv", "w+") as file_:
             writer = csv.writer(file_)
+            writer.writerow(["match", "url"])
 
             for doc_id in self.documents:
                 document = self.client.documents.get(doc_id)

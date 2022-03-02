@@ -23,7 +23,6 @@ class Regex(AddOn):
                     for m in pattern.findall(document.full_text)
                 )
 
-            print("file size", file_.tell())
             self.upload_file(file_)
 
 

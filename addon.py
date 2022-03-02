@@ -78,7 +78,6 @@ class AddOn:
         presigned_url = resp.json()["presigned_url"]
         # use buffer as it should always be binary, which requests wants
         response = requests.put(presigned_url, data=file.buffer)
-        print(response)
         response.raise_for_status()
         return self.client.patch(
             f"addon_runs/{self.id}/", json={"file_name": file_name}

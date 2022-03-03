@@ -5,7 +5,7 @@ This is an add-on to search a document for a regex and output all of the matches
 import csv
 import re
 
-from addon import AddOn
+from documentcloud.addon import AddOn
 
 
 class Regex(AddOn):

@@ -3,6 +3,8 @@ description: >-
   This will return a JSON file of all strings the given regex matches in
   the selected files
 type: object
+documents:
+  - selected
 properties:
   regex:
     title: Regex

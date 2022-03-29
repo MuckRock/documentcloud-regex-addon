@@ -17,8 +17,7 @@ class Regex(AddOn):
             writer = csv.writer(file_)
             writer.writerow(["match", "url"])
 
-            for doc_id in self.documents:
-                document = self.client.documents.get(doc_id)
+            for document in self.client.documents.list(id__in=self.documents):
                 writer.writerows(
                     [m, document.canonical_url]
                     for m in pattern.findall(document.full_text)

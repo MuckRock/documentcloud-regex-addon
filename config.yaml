@@ -11,3 +11,5 @@ properties:
     type: string
     format: regex
 required: [regex]
+categories: 
+  - extraction 

@@ -19,13 +19,14 @@ class Regex(AddOn):
 
         with open("matches.csv", "w+") as file_:
             writer = csv.writer(file_)
-            writer.writerow(["match", "url"])
+            writer.writerow(["match", "url", "page_number"])
 
-            for document in self.client.documents.list(id__in=self.documents):
-                writer.writerows(
-                    [m, document.canonical_url]
-                    for m in pattern.findall(document.full_text)
-                )
+            for document in self.get_documents():
+                for page_number in range(1, document.page_count + 1):
+                    page_text = document.get_page_text(page_number)
+                    matches = pattern.findall(page_text)
+                    for match in matches:
+                        writer.writerow([match, document.canonical_url, page_number])
 
             self.upload_file(file_)
 

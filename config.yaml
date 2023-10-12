@@ -1,7 +1,8 @@
 title: Regex Extractor
 description: >-
-  This will return a JSON file of all strings the given regex matches in
-  the selected files
+  Given a regular expression as input, this Add-On searches through each document for matches.
+  It outputs a CSV listing the regular expression, the match, the document it was found in,
+  and the page number the match was was found on. 
 type: object
 documents:
   - selected

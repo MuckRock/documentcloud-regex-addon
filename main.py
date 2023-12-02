@@ -10,10 +10,9 @@ from documentcloud.addon import AddOn
 
 class Regex(AddOn):
     def main(self):
-        """if not self.documents:
-            self.set_message("Please select at least one document")
-            return"""
-
+        if self.get_document_count() is None:
+            self.set_message("Please select at least one document.")
+            return
         regex = self.data["regex"]
         pattern = re.compile(regex)
 

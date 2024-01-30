@@ -13,6 +13,20 @@ properties:
     title: Regex
     type: string
     format: regex
+  annotate:
+    title: Annotate
+    type: boolean
+    description: Annotate pages where regex matches are found. 
+    default: false
+  annotation_access:
+    title: Access Level
+    type: string
+    description: Access level for posted annotations with matches.
+    enum:
+      - private
+      - organization
+      - public
+    default: private
 required: [regex]
 categories: 
   - extraction 

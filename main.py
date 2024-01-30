@@ -9,14 +9,20 @@ from documentcloud.addon import AddOn
 
 
 class Regex(AddOn):
+    """ Uses re to find all regular expressions matches, 
+        outputs the results in a CSV, optionally annotates the document. 
+    """
     def main(self):
+        """ Main functionality """
         if self.get_document_count() is None:
             self.set_message("Please select at least one document.")
             return
         regex = self.data["regex"]
         pattern = re.compile(regex)
+        annotate = self.data['annotate']
+        access_level = self.data['annotation_access']
 
-        with open("matches.csv", "w+") as file_:
+        with open("matches.csv", "w+", encoding="utf-8") as file_:
             writer = csv.writer(file_)
             writer.writerow(["match", "url", "page_number"])
 
@@ -26,6 +32,10 @@ class Regex(AddOn):
                     matches = pattern.findall(page_text)
                     for match in matches:
                         writer.writerow([match, document.canonical_url, page_number])
+                        if annotate:
+                            document.annotations.create(
+                                title=f"{match}", page_number=page_number-1, access=access_level
+                            )
 
             self.upload_file(file_)
 

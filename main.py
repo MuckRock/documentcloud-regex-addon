@@ -21,7 +21,7 @@ class Regex(AddOn):
         pattern = re.compile(regex)
         annotate = self.data['annotate']
         access_level = self.data['annotation_access']
-
+        print(annotate)
         with open("matches.csv", "w+", encoding="utf-8") as file_:
             writer = csv.writer(file_)
             writer.writerow(["match", "url", "page_number"])

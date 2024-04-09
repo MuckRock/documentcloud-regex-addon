@@ -26,17 +26,18 @@ class Regex(AddOn):
             writer.writerow(["match", "url", "page_number"])
 
             for document in self.get_documents():
-                annotated_pages = set()
+                # annotated_pages = set()
                 for page_number in range(1, document.page_count + 1):
                     page_text = document.get_page_text(page_number)
                     matches = pattern.findall(page_text)
                     for match in matches:
                         writer.writerow([match, document.canonical_url, page_number])
-                        if annotate and page_number not in annotated_pages:
+                        if annotate:
+                            # and page_number not in annotated_pages
                             document.annotations.create(
                                 title=f"{match}", page_number=page_number-1, access=access_level
                             )
-                            annotated_pages.add(page_number)
+                            # annotated_pages.add(page_number)
 
             self.upload_file(file_)
 

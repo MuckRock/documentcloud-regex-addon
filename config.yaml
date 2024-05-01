@@ -12,7 +12,6 @@ properties:
   regex:
     title: Regex
     type: string
-    format: regex
   annotate:
     title: Annotate
     type: boolean

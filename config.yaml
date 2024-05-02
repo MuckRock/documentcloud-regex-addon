@@ -26,6 +26,9 @@ properties:
       - organization
       - public
     default: private
+  tag_name:
+    title: Tag
+    type: string
 required: [regex]
 categories: 
   - extraction 

@@ -21,6 +21,7 @@ class Regex(AddOn):
         pattern = re.compile(regex)
         annotate = self.data['annotate']
         access_level = self.data['annotation_access']
+        tag_name = self.data.get("tag_name").strip()
         with open("matches.csv", "w+", encoding="utf-8") as file_:
             writer = csv.writer(file_)
             writer.writerow(["match", "url", "page_number"])
@@ -38,7 +39,14 @@ class Regex(AddOn):
                                 title=f"{match}", page_number=page_number-1, access=access_level
                             )
                             # annotated_pages.add(page_number)
-
+                        if tag_name:
+                            try:
+                                document.data[tag_name]
+                                document.save()
+                            except (APIError, RequestException) as exc:
+                                print("Tagging Error on Document", str(exc))
+                                pring(document.title)
+                                
             self.upload_file(file_)
 
 

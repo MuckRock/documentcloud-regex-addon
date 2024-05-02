@@ -29,6 +29,7 @@ properties:
   tag_name:
     title: Tag
     type: string
+    description: Tag the documents on which matches are found (useful for sorting documents after). 
 required: [regex]
 categories: 
   - extraction 

@@ -26,6 +26,14 @@ properties:
       - organization
       - public
     default: private
+  key:
+    title: Key
+    type: string
+    description: Tag the documents on which matches are found. Use _tag if you want to add a normal tag. Otherwise provide the name of your key.
+    default: _tag
+  value:
+    title: Value
+    type: string
 required: [regex]
 categories: 
   - extraction 

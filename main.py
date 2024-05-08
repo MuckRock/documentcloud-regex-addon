@@ -41,13 +41,12 @@ class Regex(AddOn):
                             )
                             # annotated_pages.add(page_number)
                         if key in document.data:
-                                document.data[key].append(value)
-                                document.put()
-                            else: 
-                                document.data[key] = value
-                                document.put()
+                            document.data[key].append(value)
+                            document.put()
+                        else:
+                            document.data[key] = value
+                            document.put()
             self.upload_file(file_)
-
 
 if __name__ == "__main__":
     Regex().main()

@@ -26,10 +26,10 @@ properties:
       - organization
       - public
     default: private
-  tag_name:
-    title: Tag
+  key:
+    title: Key
     type: string
-    description: Tag the documents on which matches are found (useful for sorting documents after). 
+    description: Tag the documents on which matches are found (useful for sorting documents af
 required: [regex]
 categories: 
   - extraction 

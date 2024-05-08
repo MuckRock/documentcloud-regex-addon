@@ -39,10 +39,10 @@ class Regex(AddOn):
                                 title=f"{match}", page_number=page_number-1, access=access_level
                             )
                             # annotated_pages.add(page_number)
-                        if tag_name:
+                        if key:
                             try:
-                                document.data[tag_name]
-                                document.save()
+                                document.data["_tag"] = key
+                                document.put()
                             except (APIError, RequestException) as exc:
                                 print("Tagging Error on Document", str(exc))
                                 pring(document.title)

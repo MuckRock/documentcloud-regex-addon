@@ -29,7 +29,10 @@ properties:
   key:
     title: Key
     type: string
-    description: Tag the documents on which matches are found (useful for sorting documents af
+    description: Tag the documents on which matches are found. Use _tag if you want to add a normal tag. Otherwise provide the name of your key.
+  value:
+    title: Value
+    type: string
 required: [regex]
 categories: 
   - extraction 

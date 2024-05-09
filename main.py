@@ -6,8 +6,6 @@ import csv
 import re
 
 from documentcloud.addon import AddOn
-from documentcloud.exceptions import APIError
-from requests.exceptions import RequestException
 
 
 class Regex(AddOn):
@@ -25,6 +23,7 @@ class Regex(AddOn):
         annotate = self.data["annotate"]
         access_level = self.data["annotation_access"]
         key = self.data.get("key").strip()
+        value = self.data.get("value").strip()
         with open("matches.csv", "w+", encoding="utf-8") as file_:
             writer = csv.writer(file_)
             writer.writerow(["match", "url", "page_number"])
@@ -44,13 +43,10 @@ class Regex(AddOn):
                                 access=access_level,
                             )
                             # annotated_pages.add(page_number)
-                        if key:
-                            try:
-                                document.data["_tag"] = key
-                                document.put()
-                            except (APIError, RequestException) as exc:
-                                print("Tagging Error on Document", str(exc))
-                                print(document.title)
+                        if value is not None:
+                            document.data[key] = value
+                            document.save()
+                self.upload_file(file_)
 
 
 if __name__ == "__main__":

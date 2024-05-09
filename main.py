@@ -6,21 +6,24 @@ import csv
 import re
 
 from documentcloud.addon import AddOn
+from documentcloud.exceptions import APIError
+from requests.exceptions import RequestException
 
 
 class Regex(AddOn):
-    """ Uses re to find all regular expressions matches, 
-        outputs the results in a CSV, optionally annotates the document. 
+    """Uses re to find all regular expressions matches,
+    outputs the results in a CSV, optionally annotates the document.
     """
+
     def main(self):
-        """ Main functionality """
+        """Main functionality"""
         if self.get_document_count() is None:
             self.set_message("Please select at least one document.")
             return
         regex = self.data["regex"]
         pattern = re.compile(regex)
-        annotate = self.data['annotate']
-        access_level = self.data['annotation_access']
+        annotate = self.data["annotate"]
+        access_level = self.data["annotation_access"]
         key = self.data.get("key").strip()
         value = self.data.get("value").strip()
         with open("matches.csv", "w+", encoding="utf-8") as file_:
@@ -37,16 +40,19 @@ class Regex(AddOn):
                         if annotate:
                             # and page_number not in annotated_pages
                             document.annotations.create(
-                                title=f"{match}", page_number=page_number-1, access=access_level
+                                title=f"{match}",
+                                page_number=page_number - 1,
+                                access=access_level,
                             )
                             # annotated_pages.add(page_number)
-                        if key in document.data:
-                            document.data[key].append(value)
-                            document.put()
-                        else:
-                            document.data[key] = value
-                            document.put()
-            self.upload_file(file_)
+                        if key:
+                            try:
+                                document.data["_tag"] = key
+                                document.put()
+                            except (APIError, RequestException) as exc:
+                                print("Tagging Error on Document", str(exc))
+                                print(document.title)
+
 
 if __name__ == "__main__":
     Regex().main()

@@ -44,7 +44,10 @@ class Regex(AddOn):
                             )
                             # annotated_pages.add(page_number)
                         if value is not None:
-                            document.data[key] = value
+                            if key in document.data:
+                                document.data[key].append(value)
+                            else:
+                                document.data[key] = [value]
                             document.save()
                 self.upload_file(file_)
 

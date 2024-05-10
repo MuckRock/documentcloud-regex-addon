@@ -49,7 +49,7 @@ class Regex(AddOn):
                             else:
                                 document.data[key] = [value]
                             document.save()
-                self.upload_file(file_)
+            self.upload_file(file_)
 
 
 if __name__ == "__main__":

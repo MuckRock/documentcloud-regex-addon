@@ -1,8 +1,7 @@
 title: Regex Extractor
 description: >-
-  Given a regular expression as input, this Add-On searches through each document for matches.
-  It outputs a CSV listing the regular expression, the match, the document it was found in,
-  and the page number the match was was found on. 
+  Given a regular expression as input, this Add-On searches through each document for matches. You can chose to add "tags" or "key-value" pairs to your document so that document is marked with the first instance of the match that is found.
+  This Add-On also outputs a CSV that lists all matches found in a given document and the page number the match was was found on. This can be helpful for analysis or inspecting your results
 instructions: ''
 type: object
 documents:
@@ -12,6 +11,7 @@ properties:
   regex:
     title: Regex
     type: string
+    description: The regular expression that you would like to search your documents for. 
   annotate:
     title: Annotate
     type: boolean
@@ -29,11 +29,8 @@ properties:
   key:
     title: Key
     type: string
-    description: Tag the documents on which matches are found. Use _tag if you want to add a normal tag. Otherwise provide the name of your key.
+    description: Use a key-value pair, where your regex match is the value and you set the key. Keep _tag if you want the regular expression match to appear as a standalone "tag" and not a key-value pair. 
     default: _tag
-  value:
-    title: Value
-    type: string
 required: [regex]
 categories: 
   - extraction 

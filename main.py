@@ -23,15 +23,21 @@ class Regex(AddOn):
         annotate = self.data["annotate"]
         access_level = self.data["annotation_access"]
         key = self.data.get("key").strip()
-        if self.data.get("value") is not None:
-            value = self.data.get("value").strip()
-        else:
-            value = None
+
         with open("matches.csv", "w+", encoding="utf-8") as file_:
             writer = csv.writer(file_)
             writer.writerow(["match", "url", "page_number"])
 
             for document in self.get_documents():
+                document_text = document.full_text
+                match = pattern.search(document_text)
+                if match is not None:
+                    match_string = match.group()
+                    if key in document.data:
+                        document.data[key].append(match_string)
+                    else:
+                        document.data[key] = [match_string]
+                    document.save()
                 # annotated_pages = set()
                 for page_number in range(1, document.page_count + 1):
                     page_text = document.get_page_text(page_number)
@@ -46,12 +52,7 @@ class Regex(AddOn):
                                 access=access_level,
                             )
                             # annotated_pages.add(page_number)
-                        if value is not None:
-                            if key in document.data:
-                                document.data[key].append(value)
-                            else:
-                                document.data[key] = [value]
-                            document.save()
+
             self.upload_file(file_)
 
 

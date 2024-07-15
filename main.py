@@ -23,7 +23,7 @@ class Regex(AddOn):
         try:
             pattern = re.compile(regex)  # Attempt to compile the regex to confirm 
         except re.error as e:
-            self.set_message(f"Invalid regular expression provided: {str(e)}")
+            self.set_message(f"Invalid regular expression provided: {regex}")
             return
 
         annotate = self.data["annotate"]

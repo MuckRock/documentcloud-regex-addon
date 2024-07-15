@@ -19,7 +19,13 @@ class Regex(AddOn):
             self.set_message("Please select at least one document.")
             return
         regex = self.data["regex"]
-        pattern = re.compile(regex)
+
+        try:
+            pattern = re.compile(regex)  # Attempt to compile the regex to confirm 
+        except re.error as e:
+            self.set_message(f"Invalid regular expression provided: {str(e)}")
+            return
+
         annotate = self.data["annotate"]
         access_level = self.data["annotation_access"]
         key = self.data.get("key").strip()

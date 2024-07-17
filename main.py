@@ -6,7 +6,7 @@ import csv
 import re
 
 from documentcloud.addon import AddOn
-
+from documentcloud.exceptions import DoesNotExistError
 
 class Regex(AddOn):
     """Uses re to find all regular expressions matches,
@@ -21,8 +21,8 @@ class Regex(AddOn):
         regex = self.data["regex"]
 
         try:
-            pattern = re.compile(regex)  # Attempt to compile the regex to confirm 
-        except re.error as e:
+            pattern = re.compile(regex)  # Attempt to compile the regex to confirm
+        except re.error:
             self.set_message(f"Invalid regular expression provided: {regex}")
             return
 
@@ -35,7 +35,10 @@ class Regex(AddOn):
             writer.writerow(["match", "url", "page_number"])
 
             for document in self.get_documents():
-                document_text = document.full_text
+                try:
+                    document_text = document.full_text
+                except DoesNotExistError:
+                    self.set_message(f"Could not match regular expressions on document with id {document.id}, please OCR this document and run Regex Extractor again.")
                 match = pattern.search(document_text)
                 if match is not None:
                     match_string = match.group()

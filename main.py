@@ -19,7 +19,7 @@ class Regex(AddOn):
         regex = self.data["regex"]
         annotate = self.data["annotate"]
         access_level = self.data["annotation_access"]
-        key = self.data.get("key").strip()
+        key = self.data.get("key", "").strip().replace(" ", "_")
 
         try:
             pattern = re.compile(regex)

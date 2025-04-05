@@ -1,7 +1,4 @@
-"""
-This is an add-on to search a document for a regex and output all of the matches
-"""
-
+""" DocumentCloud Add-On that finds regex matches in documents """
 import csv
 import re
 
@@ -9,7 +6,7 @@ from documentcloud.addon import AddOn
 from documentcloud.exceptions import DoesNotExistError
 
 class Regex(AddOn):
-    """Uses re to find all regular expressions matches,
+    """Uses re to find all regular expression matches,
     outputs the results in a CSV, optionally annotates the document.
     """
 
@@ -18,17 +15,17 @@ class Regex(AddOn):
         if self.get_document_count() is None:
             self.set_message("Please select at least one document.")
             return
+
         regex = self.data["regex"]
-
-        try:
-            pattern = re.compile(regex)  # Attempt to compile the regex to confirm
-        except re.error:
-            self.set_message(f"Invalid regular expression provided: {regex}")
-            return
-
         annotate = self.data["annotate"]
         access_level = self.data["annotation_access"]
         key = self.data.get("key").strip()
+
+        try:
+            pattern = re.compile(regex)
+        except re.error:
+            self.set_message(f"Invalid regular expression provided: {regex}")
+            return
 
         with open("matches.csv", "w+", encoding="utf-8") as file_:
             writer = csv.writer(file_)
@@ -36,34 +33,41 @@ class Regex(AddOn):
 
             for document in self.get_documents():
                 try:
-                    document_text = document.full_text
-                except DoesNotExistError:
-                    self.set_message(f"Could not match regular expressions on document with id {document.id}, please OCR this document and run Regex Extractor again.")
-                match = pattern.search(document_text)
-                if match is not None:
-                    match_string = match.group()
-                    if key in document.data:
-                        document.data[key].append(match_string)
-                    else:
-                        document.data[key] = [match_string]
-                    document.save()
-                # annotated_pages = set()
-                for page_number in range(1, document.page_count + 1):
-                    page_text = document.get_page_text(page_number)
-                    matches = pattern.findall(page_text)
+                    json_text = document.json_text
+                    pages = json_text.get("pages", [])
+                except (AttributeError, DoesNotExistError):
+                    self.set_message(
+                        f"Could not retrieve text for document with id {document.id}. "
+                        "Please ensure the document has been OCRed."
+                    )
+                    continue
+
+                matches_found = []
+
+                for page in pages:
+                    page_number = page["page"] + 1  # Convert to 1-based indexing
+                    content = page.get("contents", "")
+                    matches = pattern.findall(content)
+
                     for match in matches:
                         writer.writerow([match, document.canonical_url, page_number])
+                        matches_found.append(match)
+
                         if annotate:
-                            # and page_number not in annotated_pages
                             document.annotations.create(
                                 title=f"{match}",
                                 page_number=page_number - 1,
                                 access=access_level,
                             )
-                            # annotated_pages.add(page_number)
+
+                if matches_found:
+                    if key in document.data:
+                        document.data[key].extend(matches_found)
+                    else:
+                        document.data[key] = matches_found
+                    document.save()
 
             self.upload_file(file_)
-
 
 if __name__ == "__main__":
     Regex().main()

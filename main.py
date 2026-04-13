@@ -12,6 +12,7 @@ class Regex(AddOn):
 
     def main(self):
         """Main functionality"""
+        self.client.session.headers.update({'User-Agent': 'Regex Add-On'})
         if self.get_document_count() is None:
             self.set_message("Please select at least one document.")
             return
